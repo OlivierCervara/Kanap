@@ -72,3 +72,8 @@ function appendElementsToArticle(article, image, h3, p) {
     article.appendChild(h3)
     article.appendChild(p)
 }
+
+// Tous nos kanap nous renvoient vers product.html mais ils nous passent des params differents a chaque fois. Il va falloir faire en sorte que chaque kanap nous renvoit de maniere dynamique a sa page perso.
+// Dans le backend on a plusieurs URL a savoir product component etc et donc dans product on a la liste de tous nos produits et chaque produit a son id. 
+// On veut donc recuperer l'id dans l'URL et ensuite faire une deuxieme requete au serveur pour avoir les infos qui nous interessent.
+// C'est ces infos qu'on trouve sur nos pages produit donc sur notre product.html et de la meme maniere on va vouloir dynamiser tout ca dans cette fois si un product.js
