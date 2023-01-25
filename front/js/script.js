@@ -15,13 +15,13 @@ function addProduct(kanap) {
     // On ne veut pas que le data 0, on veut que ca nous affiche tous nos canap.
     kanap.forEach((kanap) => {
         
-    const { _id, imageUrl, altTxt, name, description } = kanap
+    let { _id, imageUrl, altTxt, name, description } = kanap
 
-    const anchor = makeAnchor(_id) //On fait un appel de la fonction makeAnchor en lui donnant en argument id comme ca on va pouvoir manipuler la variable imageUrl dans notre fontion makeAnchor
-    const article = document.createElement("article") // On creer l'element article
-    const image = makeImage(imageUrl, altTxt)
-    const h3 = makeH3(name)
-    const p = makeParagraph(description)
+    let anchor = makeAnchor(_id) //On fait un appel de la fonction makeAnchor en lui donnant en argument id comme ca on va pouvoir manipuler la variable imageUrl dans notre fontion makeAnchor
+    let article = document.createElement("article") // On creer l'element article
+    let image = makeImage(imageUrl, altTxt)
+    let h3 = makeH3(name)
+    let p = makeParagraph(description)
 
     appendChildren(anchor, article) //Pour que la fonction appendChildren puisse mettre des elements en enfants.
     appendElementsToArticle(article, image, h3, p) //Pour que la fonction appendElementsToArticle puisse mettre les elements en enfants de article.
