@@ -4,7 +4,7 @@ const urlParams = new URLSearchParams(queryString) //On extrait les params en lu
 const productId = urlParams.get("id") //On peut finalement extraire le product id venant des params de notre URL.
 if (id != null) {
     let itemPrice = 0 //let car si on avait mit const on aurait pas pu le reassigner.
-    let imgUrl, altText
+    let imgUrl, altText, articleName
 }
 
 // Maintenant qu'on a l'id on va faire une requete au serveur pour avoir un peu plus d'informations
@@ -18,6 +18,7 @@ function handleData(kanap) {
     itemPrice = price //On prend le prix depuis l'API pour le coller a la variable itemPrice ligne6
     imgUrl = imageUrl
     altText = altTxt
+    articleName = name
     makeImage(altTxt, imageUrl)
     makeTitle(name)
     makePrice(price)
@@ -82,7 +83,8 @@ function saveOrder(color, quantity) {
         quantity: Number(quantity), //Par defaut la console nous renvoit un quantity en string, il est preferable que ce soit un number.
         price: itemPrice,
         imageUrl: imgUrl,
-        altTxt: altText
+        altTxt: altText,
+        name: articleName
     }
     localStorage.setItem(id, JSON.stringify(data)) //localStorage ne peut pas enregistrer des objets, on doit les transformer en string.
 }
