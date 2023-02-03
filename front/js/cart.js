@@ -21,7 +21,8 @@ function displayItem(item) {
     const cartItemContent = makeCartContent(item) //Fabrication d'un cartcontent
     article.appendChild(cartItemContent)
     displayArticle(article)
-    displayTotalQuantity(item)
+    displayTotalPrice()
+    displayTotalQuantity()
 }
 
 function makeCartItemContent() {
@@ -82,9 +83,28 @@ function addQuantityToSettings(settings, item) {
     input.min = "1"
     input.max = "100"
     input.value = item.quantity
+    input.addEventListener("input", () => updatePriceAndQuantity(item.id, item, input.value))
     
     settings.appendChild(quantity)
     quantity.appendChild(input)
+}
+
+function updatePriceAndQuantity(id, newValue, item) {
+    const itemToUpdate = cart.find(item => item.id === id)
+    itemToUpdate.quantity = Number(newValue) //On veut pas une string
+    displayTotalPrice()
+    displayTotalQuantity()
+    //On lui a enregistrer de nouvelles valeurs mais quand on recharge la page on a un reset.
+    //On va donc ecraser la valeur dans le local storage pour la remplacer avec la nouvelle.
+    // Le probleme est que nos objets ont le meme id quelque soit la couleur et on voudrait distinguer dans le panier le meme modele de canape maiss en plusieurs couleurs.
+    // On pourrait changer le nom de la clef en lui rajoutant une couleur pour distinguer les deux objets. Et donc le meme item avec des couleurs differentes auront des id differents.
+    saveNewDataToCache(item)
+}
+
+function saveNewDataToCache(item) {
+    const dataToSave = JSON.stringify(item)
+    const key = `${item.id}-${item.color}`
+    localStorage.setItem(key, dataToSave)
 }
 
 function addDeleteToSettings(settings) {
@@ -119,7 +139,14 @@ function makeImageDiv(item) {
     return div
 }
 
-function displayTotalQuantity(item) {
+function displayTotalPrice() {
+    const totalPrice = document.querySelector("#totalPrice")
+    const total = cart.reduce((total, item) => total + item.price * item.quantity, 0)
+    totalPrice.textContent = total
+}
+
+function displayTotalQuantity() {
     const totalQuantity = document.querySelector("#totalQuantity")
-    totalQuantity.textContent = item.quantity
+    const total = cart.reduce((total, item) => total + item.quantity, 0)
+    totalQuantity.textContent = total
 }

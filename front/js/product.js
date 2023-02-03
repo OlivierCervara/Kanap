@@ -2,7 +2,7 @@
 const queryString = window.location.search //Ce qui nous permet de prendre l'entierete de l'URL de la page product dont on va ectraire les params
 const urlParams = new URLSearchParams(queryString) //On extrait les params en lui passant window.location.search en argu cad l'URL entiere du product.
 const productId = urlParams.get("id") //On peut finalement extraire le product id venant des params de notre URL.
-if (id != null) {
+if (productId !== null) {
     let itemPrice = 0 //let car si on avait mit const on aurait pas pu le reassigner.
     let imgUrl, altText, articleName
 }
@@ -14,6 +14,7 @@ fetch(`http://localhost:3000/api/products/${id}`) //Ce qui nous permet d'extrair
 
 // Maintenant qu'on a recupere les donnees nous allons les afficher de la meme maniere que dans le script.js
 function handleData(kanap) {
+    console.log(kanap);
     const { altTxt, colors, description, imageUrl, name, price } = kanap
     itemPrice = price //On prend le prix depuis l'API pour le coller a la variable itemPrice ligne6
     imgUrl = imageUrl
@@ -31,7 +32,7 @@ function makeImage(altTxt, imageUrl) {
     const image = document.createElement('img')
     image.src = imageUrl
     image.alt = altTxt
-    const parent = document.querySelector(".item_img")
+    const parent = document.querySelector(".item__img")
     parent.appendChild(image)
 }
 
@@ -86,7 +87,8 @@ function saveOrder(color, quantity) {
         altTxt: altText,
         name: articleName
     }
-    localStorage.setItem(id, JSON.stringify(data)) //localStorage ne peut pas enregistrer des objets, on doit les transformer en string.
+    localStorage.setItem(key, JSON.stringify(data)) //localStorage ne peut pas enregistrer des objets, on doit les transformer en string.
+    //L'id est remplacee par key afin de distinguer 2 items avec des coloris differents (voir cart.js)
 }
 
 function isOrderInvalid(color, quantity) { //"Est ce que le choix de produit est invalide ?" et la fonction renvoit true si une seule des conditions est remplie.
@@ -99,4 +101,5 @@ function isOrderInvalid(color, quantity) { //"Est ce que le choix de produit est
 function redirectToCart() {
     window.location.href = "cart.html" //Pour nous rediriger vers notre page panier grace a son URL.
 }
+
 // L'objectif est de mettre nos donnees de commande dans notre base de donnee locale qui est le localStorage pour pouvoir les recuperer ensuite dans notre page panier.
