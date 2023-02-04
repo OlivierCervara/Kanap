@@ -64,7 +64,7 @@ function makeSettings(item) {
     settings.classList.add("cart__item__content__settings")
 
     addQuantityToSettings(settings, item)
-    addDeleteToSettings(settings)
+    addDeleteToSettings(settings, item)
     return settings
 }
 
@@ -92,6 +92,7 @@ function addQuantityToSettings(settings, item) {
 function updatePriceAndQuantity(id, newValue, item) {
     const itemToUpdate = cart.find(item => item.id === id)
     itemToUpdate.quantity = Number(newValue) //On veut pas une string
+    item.quantity = itemToUpdate.quantity
     displayTotalPrice()
     displayTotalQuantity()
     //On lui a enregistrer de nouvelles valeurs mais quand on recharge la page on a un reset.
@@ -103,17 +104,41 @@ function updatePriceAndQuantity(id, newValue, item) {
 
 function saveNewDataToCache(item) {
     const dataToSave = JSON.stringify(item)
-    const key = `${item.id}-${item.color}`
+    const key = `${item.id}-${item.color}` //On creer un clef qui renferme l'id de l'item avec joint sa couleur ce qui nous permettra de differencier dans le panier deux canape ayant une couleur differente.
     localStorage.setItem(key, dataToSave)
 }
 
-function addDeleteToSettings(settings) {
+function addDeleteToSettings(settings, item) {
     const div = document.createElement("div")
     div.classList.add("cart__item__content__settings__delete")
+    div.addEventListener("click", () => deleteItem(item)) //Quand on clique sur l'element cela creer un evenement ou on supprime l'item.
+
     const p =document.createElement("p")
     p.textContent = "Supprimer"
     div.appendChild(p)
+
     settings.appendChild(div)
+}
+
+function deleteItem(item) { //On va lui dire trouve le item dans le panier qui a cette id et supprime le
+    const itemToDelete = cart.findIndex(product => product.id === item.id && product.color === item.color) //Trouve le product tel que le product.id = item.id mais on veut aussi que le product.color = item.color. Il va filtrer sur deux champs differents.
+    cart.splice(itemToDelete, 1) //On lui dit qu'on demarre a l'index itemToDelete. Le 1 permet de dire a cart.splice qu'on veut en supprimer "1".
+    
+    //Ensuite on veut que nos changements soient sauvegarder quand on actualise la page.
+    displayTotalPrice()
+    displayTotalQuantity()
+    deleteDataFromCache(item)
+    deleteArticleFromPage(item) //On veut aussi que le front correspondant disparaisse
+}
+
+function deleteArticleFromPage(item) { //Le probleme c'est qu'encore une fois on veut supprimer le meme article avec le bon id et la bonne couleur.
+    const articleToDelete = document.querySelector(`article[data-id="${item.id}"][data.color="${item.color}"]`) //On va donc chercher un article avec un data id correspondant a l'item id et qui a egalement un color de item color comme ca on est sur de choper le bon.
+    articleToDelete.remove()
+}
+
+function deleteDataFromCache(item) {
+    const key = `${item.id}-${item.color}`
+    localStorage.removeItem(key)
 }
 
 function displayArticle(article) {
