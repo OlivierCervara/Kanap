@@ -1,7 +1,10 @@
-const cart = []
+const cart = [] //Parce que notre panier est une array
 
 retrieveItemsFromCache()
 cart.forEach(item => displayItem(item))
+
+const orderButton = document.querySelector("#order")
+orderButton.addEventListener("click", () => submitForm()) //Quand on clique sur le boutton on appelle la fonction submitForm.
 
 function retrieveItemsFromCache() {
     const numberOfItems = localStorage.length //On recupere ce que l'utilisateur a envoyer dans le localstorage grace a ses orders et on voudra l'afficher dans le panier.
@@ -174,4 +177,88 @@ function displayTotalQuantity() {
     const totalQuantity = document.querySelector("#totalQuantity")
     const total = cart.reduce((total, item) => total + item.quantity, 0)
     totalQuantity.textContent = total
+}
+
+// Formulaire
+function submitForm(e) { 
+    e.preventDefault()
+    
+    if (cart.length === 0) {
+        alert("Veuillez ajouter des articles a votre panier")
+        return
+    }
+
+    if (isFormInvalid()) return //Si le formulaire est invalide tu vas pas plus loin.
+    if (isEmailInvalid()) return
+
+    const body = makeRequestBody()
+    fetch("http://localhost:3000/api/products/order", {
+        method: "POST",
+        body: JSON.stringify(body),
+        headers: {
+            "Content-Type": "application/json"
+        }
+    })
+        .then((res) => res.json())
+        .then((data) => {
+            const orderId = data.orderId
+            window.location.href = "/html/confirmation.html" + "?orderId" + orderId
+            console.log(data)
+        })
+        .catch((err) => console.log(err))
+}
+
+function isEmailInvalid() { //Cela va nous permettre de "verifier" l'email du client.
+    const email = document.querySelector("#email").value
+    const regex = /^[A-Za-z0-9+_.-]+@(.+)$/ //C'est une expression reguliere permettant de verifier les caracteres entres par l'utilisateurs afin dans le cas present de voir si il rentre bien un email.
+    if (regex.test(email) === false) {
+        alert("Veuillez entrer un email valide")
+        return true
+    }
+    return false
+}
+
+function isFormInvalid() {
+    const form = document.querySelector(".cart__order__form")
+    const inputs = form.querySelectorAll("input") //Il va nous faire une liste de toutes les forms d'inputs
+    inputs.forEach((input) => {
+        if (input.value === "") {
+            alert("Veuillez completer toutes les parties du formulaire")
+            return true
+        } //Pour chaque input, si la value est nulle il va nous donner une alerte et il va faire un return pour arreter l'execution de la fonction
+        return false
+    })
+}
+
+//L'api du serveur attend un objet avec une clef contact etc... et il veut une clef qui s'appelle product qui a une array de string et cette array sera des product id.
+
+function makeRequestBody() {
+    const form = document.querySelector(".cart__order__form")
+    const firstName = form.elements.firstName.value
+    const lastName = form.elements.lastName.value
+    const address = form.elements.address.value
+    const city = form.elements.city.value
+    const email = form.elements.email.value
+    const body = {
+        contact: {
+        firstName: firstName,
+        lastName: lastName,
+        address: address,
+        city: city,
+        email: email
+        },
+        products: getIdsFromCache()
+    }
+    return body
+}
+
+function getIdsFromCache() {
+    const numberOfProducts = localStorage.length
+    const ids = []
+    for (let i=0; i < numberOfProducts; i++) {
+        const key = localStorage.key(i)
+        const id = key.split("-")[0]
+        ids.push(id)
+    }
+    return ids
 }
