@@ -21,8 +21,8 @@ function displayItem(item) {
     const imageDiv = makeImageDiv(item) //Fabrication d'une imageDiv
     article.appendChild(imageDiv) //Puis imageDiv devient enfant de article
 
-    const cartItemContent = makeCartContent(item) //Fabrication d'un cartcontent
-    article.appendChild(cartItemContent)
+    const cardItemContent = makeCartContent(item) //Fabrication d'un cartcontent
+    article.appendChild(cardItemContent)
     displayArticle(article)
     displayTotalPrice()
     displayTotalQuantity()
@@ -41,15 +41,15 @@ function displayTotalPrice() {
 }
 
 function makeCartContent(item) {
-    const cartItemContent = document.createElement("div")
-    cartItemContent.classList.add("cart__item__content")
+    const cardItemContent = document.createElement("div")
+    cardItemContent.classList.add("cart__item__content")
 
     const description = makeDescription(item)
     const settings = makeSettings(item)
     
-    cartItemContent.appendChild(description)
-    cartItemContent.appendChild(settings)
-    return cartItemContent
+    cardItemContent.appendChild(description)
+    cardItemContent.appendChild(settings)
+    return cardItemContent
 }
 
 function makeSettings(item) {
@@ -134,7 +134,6 @@ function saveNewDataToCache(item) {
     localStorage.setItem(key, dataToSave)
 }
 
-
 function makeDescription(item) {
     const description = document.createElement("div") //On creer un element div
     description.classList.add("cart__item__content__description") //On lui ajoute cart__item__content__description
@@ -151,12 +150,6 @@ function makeDescription(item) {
     description.appendChild(p2)
     return description
 }
-
-
-
-
-
-
 
 function displayArticle(article) {
     document.querySelector("#cart__items").appendChild(article)
@@ -180,8 +173,6 @@ function makeImageDiv(item) {
     div.appendChild(image)
     return div
 }
-
-
 
 // Formulaire
 function submitForm(e) { 
