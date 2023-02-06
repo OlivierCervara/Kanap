@@ -1,15 +1,15 @@
 const cart = [] //Parce que notre panier est une array
 
 retrieveItemsFromCache()
-cart.forEach(item => displayItem(item))
+cart.forEach((item) => displayItem(item))
 
 const orderButton = document.querySelector("#order")
 orderButton.addEventListener("click", (e) => submitForm(e)) //Quand on clique sur le boutton on appelle la fonction submitForm.
 
 function retrieveItemsFromCache() {
     const numberOfItems = localStorage.length //On recupere ce que l'utilisateur a envoyer dans le localstorage grace a ses orders et on voudra l'afficher dans le panier.
-
-    for(let i = 0; i < numberOfItems; i++) {
+    
+    for (let i = 0; i < numberOfItems; i++) {
         const item = localStorage.getItem(localStorage.key(i)) || ""
         const itemObject = JSON.parse(item) //parse nous transforme item en objet. C'est le contraire de stringify.
         cart.push(itemObject)
@@ -17,15 +17,15 @@ function retrieveItemsFromCache() {
 }
 
 function displayItem(item) {
-    const article =makeArticle(item) //Fabrication d'un article
+    const article = makeArticle(item) //Fabrication d'un article
     const imageDiv = makeImageDiv(item) //Fabrication d'une imageDiv
     article.appendChild(imageDiv) //Puis imageDiv devient enfant de article
-
+    
     const cardItemContent = makeCartContent(item) //Fabrication d'un cartcontent
     article.appendChild(cardItemContent)
     displayArticle(article)
-    displayTotalPrice()
     displayTotalQuantity()
+    displayTotalPrice()
 }
 
 function displayTotalQuantity() {
@@ -46,7 +46,7 @@ function makeCartContent(item) {
 
     const description = makeDescription(item)
     const settings = makeSettings(item)
-    
+
     cardItemContent.appendChild(description)
     cardItemContent.appendChild(settings)
     return cardItemContent
@@ -66,15 +66,15 @@ function addDeleteToSettings(settings, item) {
     div.classList.add("cart__item__content__settings__delete")
     div.addEventListener("click", () => deleteItem(item)) //Quand on clique sur l'element cela creer un evenement ou on supprime l'item.
 
-    const p =document.createElement("p")
+    const p = document.createElement("p")
     p.textContent = "Supprimer"
     div.appendChild(p)
-
+    
     settings.appendChild(div)
 }
 
 function deleteItem(item) { //On va lui dire trouve le item dans le panier qui a cette id et supprime le
-    const itemToDelete = cart.findIndex(product => product.id === item.id && product.color === item.color) //Trouve le product tel que le product.id = item.id mais on veut aussi que le product.color = item.color. Il va filtrer sur deux champs differents.
+    const itemToDelete = cart.findIndex((product) => product.id === item.id && product.color === item.color) //Trouve le product tel que le product.id = item.id mais on veut aussi que le product.color = item.color. Il va filtrer sur deux champs differents.
     cart.splice(itemToDelete, 1) //On lui dit qu'on demarre a l'index itemToDelete. Le 1 permet de dire a cart.splice qu'on veut en supprimer "1".
     
     //Ensuite on veut que nos changements soient sauvegarder quand on actualise la page.
@@ -89,10 +89,10 @@ function deleteArticleFromPage(item) { //Le probleme c'est qu'encore une fois on
     articleToDelete.remove()
 }
 
-function addQuantityToSettings(settings, item) {
+function addQuantityToSettings(settings, item) { 
     const quantity = document.createElement("div")
     quantity.classList.add("cart__item__content__settings__quantity")
-    
+
     const p = document.createElement("p")
     p.textContent = "Qté : "
     quantity.appendChild(p)
@@ -104,18 +104,18 @@ function addQuantityToSettings(settings, item) {
     input.min = "1"
     input.max = "100"
     input.value = item.quantity
-    input.addEventListener("input", () => updatePriceAndQuantity(item.id, item, input.value))
-    
-    settings.appendChild(quantity)
+    input.addEventListener("input", () => updatePriceAndQuantity(item.id, input.value, item))
+
     quantity.appendChild(input)
+    settings.appendChild(quantity)
 }
 
 function updatePriceAndQuantity(id, newValue, item) {
-    const itemToUpdate = cart.find(item => item.id === id)
-    itemToUpdate.quantity = Number(newValue) //On veut pas une string
+    const itemToUpdate = cart.find((item) => item.id === id)
+    itemToUpdate.quantity = Number(newValue)
     item.quantity = itemToUpdate.quantity
-    displayTotalPrice()
     displayTotalQuantity()
+    displayTotalPrice()
     //On lui a enregistrer de nouvelles valeurs mais quand on recharge la page on a un reset.
     //On va donc ecraser la valeur dans le local storage pour la remplacer avec la nouvelle.
     // Le probleme est que nos objets ont le meme id quelque soit la couleur et on voudrait distinguer dans le panier le meme modele de canape maiss en plusieurs couleurs.
@@ -166,8 +166,8 @@ function makeArticle(item) {
 function makeImageDiv(item) {
     const div = document.createElement("div")
     div.classList.add("cart__item__img")
-    
-    const image = document.createElement('img')
+
+    const image = document.createElement("img")
     image.src = item.imageUrl
     image.alt = item.altTxt
     div.appendChild(image)
@@ -175,11 +175,11 @@ function makeImageDiv(item) {
 }
 
 // Formulaire
-function submitForm(e) { 
+function submitForm(e) {
     e.preventDefault()
     
     if (cart.length === 0) {
-        alert("Veuillez ajouter des articles a votre panier")
+        alert("Please select items to buy")
         return
     }
 
@@ -197,10 +197,10 @@ function submitForm(e) {
         .then((res) => res.json())
         .then((data) => {
             const orderId = data.orderId
-            window.location.href = "/html/confirmation.html" + "?orderId" + orderId
+            window.location.href = "/html/confirmation.html" + "?orderId=" + orderId
             console.log(data)
         })
-        .catch((err) => console.log(err))
+        .catch((err) => console.error(err))
 }
 
 function isEmailInvalid() { //Cela va nous permettre de "verifier" l'email du client.
@@ -250,7 +250,7 @@ function makeRequestBody() {
 function getIdsFromCache() {
     const numberOfProducts = localStorage.length
     const ids = []
-    for (let i=0; i < numberOfProducts; i++) {
+    for (let i = 0; i < numberOfProducts; i++) {
         const key = localStorage.key(i)
         const id = key.split("-")[0]
         ids.push(id)
