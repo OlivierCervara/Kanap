@@ -1,11 +1,10 @@
 // Ici nous voulons rechercher les parametres d'URL afin d'acceder a ce qu contient les differentes id de nos kanap
 const queryString = window.location.search //Ce qui nous permet de prendre l'entierete de l'URL de la page product dont on va ectraire les params
 const urlParams = new URLSearchParams(queryString) //On extrait les params en lui passant window.location.search en argu cad l'URL entiere du product.
-const productId = urlParams.get("id") //On peut finalement extraire le product id venant des params de notre URL.
-if (productId !== null) {
-    let itemPrice = 0 //let car si on avait mit const on aurait pas pu le reassigner.
-    let imgUrl, altText, articleName
-}
+const id = urlParams.get("id") //On peut finalement extraire le product id venant des params de notre URL.
+    
+let itemPrice = 0 //let car si on avait mit const on aurait pas pu le reassigner.
+let imgUrl, altText, articleName
 
 // Maintenant qu'on a l'id on va faire une requete au serveur pour avoir un peu plus d'informations
 fetch(`http://localhost:3000/api/products/${id}`) //Ce qui nous permet d'extraire les donnees de l'id a l'interieur de product
@@ -78,6 +77,7 @@ function handleClick() { //La fonction va lire le color et le quantity depuis le
 }
 
 function saveOrder(color, quantity) {
+    const key = `${id}-${color}`
     const data = {
         id: id,
         color: color,
