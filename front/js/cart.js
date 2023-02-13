@@ -104,6 +104,7 @@ function addQuantityToSettings(settings, item) {
     input.min = "1"
     input.max = "100"
     input.value = item.quantity
+
     input.addEventListener("input", () => updatePriceAndQuantity(item.id, input.value, item))
 
     quantity.appendChild(input)
@@ -114,6 +115,17 @@ function updatePriceAndQuantity(id, newValue, item) {
     const itemToUpdate = cart.find((item) => item.id === id)
     itemToUpdate.quantity = Number(newValue)
     item.quantity = itemToUpdate.quantity
+
+    if (item.quantity < 1 || item.quantity > 100) {
+        // Réinitialiser la quantité à 0
+        item.quantity = 0;
+        alert("La quantité doit être comprise entre 1 et 100.");
+        
+    } else {
+        saveNewDataToCache(item) // Mettre à jour la quantité dans le panier et le local storage
+        // ...
+    }
+
     displayTotalQuantity()
     displayTotalPrice()
     //On lui a enregistrer de nouvelles valeurs mais quand on recharge la page on a un reset.
