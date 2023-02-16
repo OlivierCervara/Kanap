@@ -231,6 +231,7 @@ function isFormInvalid() {
     inputs.forEach((input) => {
         if (input.value === "") {
             alert("Veuillez completer toutes les parties du formulaire")
+            submitBtn.disabled = true;
             return true
         } //Pour chaque input, si la value est nulle il va nous donner une alerte et il va faire un return pour arreter l'execution de la fonction
         return false
