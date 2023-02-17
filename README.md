@@ -3,7 +3,7 @@
 
 Cinquième projet du parcours "Développeur web" d'OpenClassroom. L'objectif est de construire un site e-commerce en JavaScript.
 
-# Technologie utilisée
+## Technologie utilisée
 
  <img src="https://img.shields.io/badge/JavaScript-323330?style=for-the-badge&logo=javascript&logoColor=F7DF1E" />
 
