@@ -116,7 +116,7 @@ function updatePriceAndQuantity(id, newValue, item) {
     itemToUpdate.quantity = Number(newValue)
     item.quantity = itemToUpdate.quantity
 
-    if (item.quantity < 1 || item.quantity > 100) {
+    if (item.quantity <= 0 || item.quantity > 100) {
         // Réinitialiser la quantité à 0
         item.quantity = 0;
         alert("La quantité doit être comprise entre 1 et 100.");

@@ -93,7 +93,7 @@ function saveOrder(color, quantity) {
 }
 
 function isOrderInvalid(color, quantity) { //"Est ce que le choix de produit est invalide ?" et la fonction renvoit true si une seule des conditions est remplie.
-    if (color == null || color === "" || quantity == null || quantity == 0 || quantity >= 100) {
+    if (color == null || color === "" || quantity == null || quantity <= 0 || quantity >= 100) {
         alert("Veuillez selectionner un nombre d'article compris entre 1 et 100 ainsi qu'une couleur.")
         return true //On veut que la fonction arrete de s'executer quand les conditions sont remplies.
     }
