@@ -13,13 +13,22 @@ fetch(`http://localhost:3000/api/products/${id}`) //Ce qui nous permet d'extrair
     .then((res) => handleData(res))
 
 // Maintenant qu'on a recupere les donnees nous allons les afficher de la meme maniere que dans le script.js
+
+/**
+ *Prend les données d'un produit kanap et met à jour l'interface utilisateur.
+ *
+ *  @param {Object} kanap
+ */
 function handleData(kanap) {
-    console.log(kanap);
+    // Récupère les propriétés 
     const { altTxt, colors, description, imageUrl, name, price } = kanap
+    // Met à jour les variables globales pour être utilisées dans d'autres fonctions
     itemPrice = price //On prend le prix depuis l'API pour le coller a la variable itemPrice ligne6
     imgUrl = imageUrl
     altText = altTxt
     articleName = name
+
+    // Met à jour l'interface utilisateur
     makeImage(altTxt, imageUrl)
     makeTitle(name)
     makePrice(price)
@@ -27,7 +36,12 @@ function handleData(kanap) {
     makeColors(colors)
 }
 
-// On fabrique l'element image
+/**
+ * Crée un élément image avec un texte alternatif et une URL d'image, puis devient enfant de l'element parent.
+ *
+ * @param {string} altTxt Le texte alternatif à utiliser pour l'image.
+ * @param {string} imageUrl L'URL de l'image à utiliser.
+ */
 function makeImage(altTxt, imageUrl) {
     const image = document.createElement('img')
     image.src = imageUrl
@@ -36,25 +50,41 @@ function makeImage(altTxt, imageUrl) {
     parent.appendChild(image)
 }
 
-// On fabrique l'element title
+/**
+ * Met à jour le texte d'un élément de titre spécifié avec le nom de l'élément.
+ *
+ * @param {string} name Le nom de l'élément à utiliser dans le texte du titre.
+ */
 function makeTitle(name) {
     const h1 = document.querySelector("#title") 
     h1.textContent = name //Le texte contenu dans le h1 renvoit le nom de l'item
 }
 
-// On fabrique l'element prix
+/**
+ *Met à jour le texte d'un élément de prix spécifié avec le prix de l'élément.
+ *
+ * @param {string} price  Le prix de l'élément à utiliser dans le texte du prix.
+ */
 function makePrice(price) {
     const span = document.querySelector("#price")
     span.textContent = price
 }
 
-// On fabrique l'element description
+/**
+ *Met à jour le texte d'un élément de description spécifié avec la description de l'élément.
+ *
+ * @param {string} description La description de l'élément à utiliser dans le texte de la description.
+ */
 function makeDescription(description) {
     const p = document.querySelector("#description")
     p.textContent = description
 }
 
-// On fabrique l'element couleur avec la selection via le select
+/**
+ *Crée une liste déroulante d'éléments de couleur spécifiés, puis l'ajoute à un élément parent spécifié.
+ *
+ * @param {Array} colors Un tableau d'éléments de couleur à ajouter à la liste déroulante.
+ */
 function makeColors(colors) {
     const select = document.querySelector("#colors")
     colors.forEach((color) => { //On veut que pour chaque couleur :
@@ -68,6 +98,11 @@ function makeColors(colors) {
 const button = document.querySelector("#addToCart")
 button.addEventListener("click", handleClick) 
 
+/**
+ *Cette fonction lit les valeurs de la couleur et de la quantité sélectionnées par l'utilisateur à partir du formulaire, puis vérifie si elles sont valides en appelant la fonction isOrderInvalid(). 
+ *Si les valeurs ne sont pas valides, la fonction s'arrête. 
+ *Sinon, elle appelle la fonction saveOrder() pour sauvegarder la commande dans le stockage local et la redirige vers la page du panier en appelant la fonction redirectToCart().
+ */
 function handleClick() { //La fonction va lire le color et le quantity depuis le formulaire.
     const color = document.querySelector("#colors").value
     const quantity = document.querySelector("#quantity").value
@@ -77,6 +112,12 @@ function handleClick() { //La fonction va lire le color et le quantity depuis le
     redirectToCart() //et enfin il va nous rediriger vers le cart.
 }
 
+/**
+ *Enregistre une commande dans le stockage local avec les informations spécifiées.
+ *
+ * @param {string} color La couleur de l'élément commandé.
+ * @param {number} quantity La quantité de l'élément commandé.
+ */
 function saveOrder(color, quantity) {
     const key = `${id}-${color}`
     const data = {
@@ -92,6 +133,13 @@ function saveOrder(color, quantity) {
     //L'id est remplacee par key afin de distinguer 2 items avec des coloris differents (voir cart.js)
 }
 
+/**
+ *Détermine si une commande est invalide en fonction de la couleur et de la quantité spécifiées.
+ *
+ * @param {string} color La couleur de l'élément commandé.
+ * @param {number} quantity La quantité de l'élément commandé.
+ * @return {boolean} True si la commande est invalide, false sinon.
+ */
 function isOrderInvalid(color, quantity) { //"Est ce que le choix de produit est invalide ?" et la fonction renvoit true si une seule des conditions est remplie.
     if (color == null || color === "" || quantity == null || quantity <= 0 || quantity >= 100) {
         alert("Veuillez selectionner un nombre d'article compris entre 1 et 100 ainsi qu'une couleur.")
@@ -99,6 +147,9 @@ function isOrderInvalid(color, quantity) { //"Est ce que le choix de produit est
     }
 }
 
+/**
+ *Redirige l'utilisateur vers la page du panier.
+ */
 function redirectToCart() {
     window.location.href = "cart.html" //Pour nous rediriger vers notre page panier grace a son URL.
 }

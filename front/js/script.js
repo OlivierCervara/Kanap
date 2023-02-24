@@ -1,41 +1,49 @@
-// On va diviser le code en plein de petites fonctions pour que chaque fonction corresponde a un element et que ce soit plus facile de s'y retrouver.
-
-//  1. On fetch des donnees qu'on va passer a addProduct
+// On envoi une requete pour recuperer les donnees qu'on veut afficher dans notre site web
 fetch("http://localhost:3000/api/products") 
     .then((res) => res.json()) 
     .then((data) => addProduct(data)) //On veut que les donnees recup soient directement transferees a la fonction addProduct.
     .catch((error) => console.error(error)) //Gestion des erreurs link front et back, route qui change.. serveur eteint, fetch rate.
 
-//  2. add Product recupere l'id du premier item
-//  3. On appelle la fonction makeAnchor avec en argument id
-//  5. Une fois qu'il a le resultat, il le met dans la variable anchor
-//  6. Il passe la variable a appendChildren
+/**
+ * addProduct va utiliser un forEach afin de parcourir toutes les donnees de nos produits et pour pouvoir les afficher sur la page d'accueil.
+ * Pour chaque produit, on va creer tous les elements necessaires et qui devront apparaitre grace au create element.
+ * Les elements sont ajoutes les uns aux autres grace a la fonction appendChildren et appendElementsToArticle.
+ * @param {Array} kanap un tableau d'objets représentant les produits à afficher sur la page d'accueil.
+ */
 function addProduct(kanap) {
-
-    // On ne veut pas que le data 0, on veut que ca nous affiche tous nos canap.
     kanap.forEach((kanap) => {
         
     let { _id, imageUrl, altTxt, name, description } = kanap
 
-    let anchor = makeAnchor(_id) //On fait un appel de la fonction makeAnchor en lui donnant en argument id comme ca on va pouvoir manipuler la variable imageUrl dans notre fontion makeAnchor
-    let article = document.createElement("article") // On creer l'element article
+    let anchor = makeAnchor(_id) 
+    let article = document.createElement("article") 
     let image = makeImage(imageUrl, altTxt)
     let h3 = makeH3(name)
     let p = makeParagraph(description)
 
-    appendChildren(anchor, article) //Pour que la fonction appendChildren puisse mettre des elements en enfants.
-    appendElementsToArticle(article, image, h3, p) //Pour que la fonction appendElementsToArticle puisse mettre les elements en enfants de article.
+    appendChildren(anchor, article) 
+    appendElementsToArticle(article, image, h3, p) 
     })
 }
 
-//  4. On fabrique l'element anchor
+/**
+ *makeAnchor creer un element d'ancrage et defini son url en ajoutant un parametre d'id pour chaque produit.
+ *Ce parametre sera utilise dans la page produit pour afficher les informations correspondantes a chaque produit.
+ * @param {string} id L'ID du produit.
+ * @return {HTMLElement} L'élément d'ancrage créé.
+ */
 function makeAnchor(id) {
     const anchor = document.createElement("a")
     anchor.href = "./product.html?id=" +id //On envoit un id a l'URL produit le +id est un params
     return anchor
 }
 
-// On fabrique l'element image
+/**
+ *Creation de l'element image
+ * @param {string} imageUrl L'URL de l'image.
+ * @param {string} altTxt Le texte alternatif pour l'image.
+ * @return {HTMLElement} L'élément image créé.
+ */
 function makeImage(imageUrl, altTxt) {
     const image = document.createElement("img")
     image.src = imageUrl
@@ -43,7 +51,11 @@ function makeImage(imageUrl, altTxt) {
     return image
 }
 
-// On fabrique l'element h3
+/**
+ *Creation de l'element h3 avec le nom specifie et ajoute la classe productName.
+ * @param {string} name Le nom a utiliser pour créer l'élément h3.
+ * @return {HTMLElement} L'element h3 cree avec la classe productName ajoutee.
+ */
 function makeH3(name) { //makeH3 va recevoir depuis la base de donnee un name.
     const h3 = document.createElement("h3")
     h3.textContent = name //Le texte du h3 correspond a ce qu'on a recup depuis la base de donnee sur l'element name.
@@ -51,7 +63,11 @@ function makeH3(name) { //makeH3 va recevoir depuis la base de donnee un name.
     return h3
 }
 
-// On fabrique l'element p
+/**
+ *Creation de l'element p
+ * @param {string} description la description de l'article
+ * @return {HTMLElement} le paragraphe créé
+ */
 function makeParagraph(description) {
     const p = document.createElement("p")
     p.textContent = description
@@ -59,16 +75,26 @@ function makeParagraph(description) {
     return p
 }
 
-//  7. appendChilren recupere la variable anchor
-//  8. Il va chercher le items et il lui rajoute en enfant le anchor et le article qu'on lui a donne.
+/**
+ *article devient enfant de anchor qui devient enfant de items
+ * @param {HTMLElement} anchor L'élément HTML qui deviendra parent de l'élément article.
+ * @param {HTMLElement} article L'élément HTML qui deviendra enfant de l'élément anchor.
+ */
 function appendChildren(anchor, article) {
     const items = document.querySelector("#items")
     items.appendChild(anchor)
-    anchor.appendChild(article) //Puisqu'on veut que le article soit un enfant du href
+    anchor.appendChild(article) 
 }
 
+/**
+ *Pour que l'image, le h3 et le p soient des enfants de article.
+ * @param {HTMLElement} article L'élément HTML dans lequel ajouter les éléments enfants.
+ * @param {HTMLElement} image L'élément HTML de l'image à ajouter.
+ * @param {HTMLElement} h3 L'élément HTML du titre à ajouter.
+ * @param {HTMLElement} p L'élément HTML du paragraphe à ajouter.
+ */
 function appendElementsToArticle(article, image, h3, p) {
-    article.appendChild(image) //Pour que l'image, le h3 et le p soient des enfants de article.
+    article.appendChild(image) 
     article.appendChild(h3)
     article.appendChild(p)
 }
