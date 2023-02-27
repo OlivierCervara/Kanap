@@ -289,7 +289,7 @@ function submitForm(e) {
     e.preventDefault()
     
     if (cart.length === 0) {
-        alert("Please select items to buy")
+        alert("Veuillez selectionner des articles a acheter")
         return
     }
 
@@ -376,7 +376,7 @@ function makeRequestBody() {
 /**
  * Récupère les IDs des produits ajoutés au panier à partir du cache local.
  * 
- * @returns {Array<string>} Un tableau contenant les IDs des produits ajoutés au panier.
+ * @returns 
  */
 function getIdsFromCache() {
     const numberOfProducts = localStorage.length

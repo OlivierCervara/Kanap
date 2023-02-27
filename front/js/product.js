@@ -2,10 +2,6 @@
 const queryString = window.location.search //Ce qui nous permet de prendre l'entierete de l'URL de la page product dont on va ectraire les params
 const urlParams = new URLSearchParams(queryString) //On extrait les params en lui passant window.location.search en argu cad l'URL entiere du product.
 const id = urlParams.get("id") //On peut finalement extraire le product id venant des params de notre URL.
-if (id != null) {
-    let itemPrice = 0 //let car si on avait mit const on aurait pas pu le reassigner.
-    let imgUrl, altText, articleName
-}
 
 // Maintenant qu'on a l'id on va faire une requete au serveur pour avoir un peu plus d'informations
 fetch(`http://localhost:3000/api/products/${id}`) //Ce qui nous permet d'extraire les donnees de l'id a l'interieur de product
